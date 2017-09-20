@@ -1,0 +1,8 @@
+#start-screen {
+	display: block;
+	position: relative;;
+}
+
+#game-canvas {
+	display: none;
+}
