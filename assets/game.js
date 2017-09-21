@@ -94,25 +94,29 @@ var question_options = [
 //Initialize games
 function Timer() {
 	number = 30;
-	TimerID = setInterval(Decrement, 1500);
+	TimerID = setInterval(Decrement, 1000);
 }
 
 function Decrement() {
 	$("#timer").html("<h2>You have " + number + " seconds remaining</h2>")
 	number--;
-	if (number === 0) {
-		clearInterval(TimerID);
+	if (number === 0 || number < 0) {
+		Stop();
 		unanswered++;
 		question++;
 		DisplayButtons();
 	}
 }
 
+function Stop() {
+	clearInterval(TimerID);
+	number = 30;
+}
+
 function DisplayButtons() {
 	current_question = question_options[question]
 	$("#title").html(question_options[question]["question"]);
-	$(".background-image img").attr("src", current_question.image)
-	console.log(current_question.image)
+	$("#background-image").html("<img height='400' width='600' src=" + question_options[question]["image"] + ">");
 	$("#first-option").html(question_options[question]["choices"][0]).attr('data-index', 0);
 	$("#second-option").html(question_options[question]["choices"][1]).attr('data-index', 1);
 	$("#third-option").html(question_options[question]["choices"][2]).attr('data-index', 2);
@@ -122,6 +126,9 @@ function DisplayButtons() {
 
 function EndGame() {
 	$("#game-canvas").hide();
+	$("#correct").html("Correct Answers: " + correct);
+	$("#incorrect").html("Incorrect Answers: " + incorrect);
+	$("#unanswered").html("Unanswered Quetions: " + unanswered);
 	$("#end-screen").show();
 }
 
@@ -131,10 +138,8 @@ function CheckAnswer(choice) {
 	console.log("Second: " + question_options[question]["correct"])
 	if (question_options[question]["choices"][choice] == question_options[question]["correct"]) {
 		correct++;
-		alert("Correct Answer")
 	} else {
 		incorrect++;
-		alert("Incorrect Answer ")
 	}
 	if (question === 7) {
 
@@ -152,8 +157,12 @@ $("#start-button").click(function () {
 	$("#start-screen").hide();
 	$("#game-canvas").show();
 	DisplayButtons();
+})
 
-	console.log(question_options)
+$("#reset-button").click(function () {
+	$("#end-screen").hide();
+	$("#game-canvas").show();
+	DisplayButtons();
 })
 
 $(".button-options").click(function () {
