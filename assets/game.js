@@ -1,106 +1,128 @@
 var question = 0;
-var score = 0;
+var correct = 0;
+var incorrect = 0;
+var unanswered = 0;
+var TimerID;
+var number;
+var current_question;
 var selected = null;
 var question_options = [
 	{
-		question: "Q1",
-		image: "Image1",
+		question: "Q1: What is the capital of the Lannisters?",
+		image: "assets/images/lannisters.jpg",
 		choices: [
-					"Choice 1",
-					"Choice 2",
-					"Choice 3",
-					"Choice 4",
+					"Winterfell",
+					"King's Landing",
+					"Lannisport",
+					"Casterly Rock",
 					],
-		correct: "Choice 1",
+		correct: "Casterly Rock",
 	}, {
-		question: "Q2",
-		image: "Image1",
+		question: "Q2: What are the House Words of House Tyrell?",
+		image: "assets/images/housetyrell.png",
 		choices: [
-					"Choice 1",
-					"Choice 2",
-					"Choice 3",
-					"Choice 4",
+					"Hear Me Roar",
+					"Growing Strong",
+					"Ours is the Fury",
+					"Unbowed, Unbent, Unbroken",
 					],
-		correct: "Choice 1",
+		correct: "Growing Strong",
 	}, {
-		question: "Q3",
-		image: "Image1",
+		question: "Q3: Who built The Wall?",
+		image: "assets/images/thewall.jpg",
 		choices: [
-					"Choice 1",
-					"Choice 2",
-					"Choice 3",
-					"Choice 4",
+					"The Others",
+					"The Children of the Forest",
+					"Brandon the Builder",
+					"The Azhor Ahai",
 					],
-		correct: "Choice 1",
+		correct: "Brandon the Builder",
 	}, {
-		question: "Q4",
-		image: "Image1",
+		question: "Q4: What is the Capital of the Reach?",
+		image: "assets/images/thereach.jpeg",
 		choices: [
-					"Choice 1",
-					"Choice 2",
-					"Choice 3",
-					"Choice 4",
+					"Highgarden",
+					"Old Town",
+					"The Eyrie",
+					"Storm's End",
 					],
-		correct: "Choice 1",
+		correct: "Highgarden",
 	}, {
-		question: "Q5",
-		image: "Image1",
+		question: "Q5: What is the Lord of Light's Name?",
+		image: "assets/images/melisandre.jpg",
 		choices: [
-					"Choice 1",
-					"Choice 2",
-					"Choice 3",
-					"Choice 4",
+					"Azhor Ahai",
+					"R'hllor",
+					"The Great Other",
+					"Rhoyne",
 					],
-		correct: "Choice 1",
+		correct: "R'hllor",
 	}, {
-		question: "Q6",
-		image: "Image1",
+		question: "Q6: Who is Jon Snow's Real Father?",
+		image: "assets/images/jonsnow.jpg",
 		choices: [
-					"Choice 1",
-					"Choice 2",
-					"Choice 3",
-					"Choice 4",
+					"Eddard 'Ned' Stark",
+					"Viserys Targaryen",
+					"Rhaegar Targaryen",
+					"Aemon Targaryen",
 					],
-		correct: "Choice 1",
+		correct: "Rhaegar Targaryen",
 	}, {
-		question: "Q7",
-		image: "Image1",
+		question: "Q7: What is the seat of House Bolton?",
+		image: "assets/images/bolton.jpg",
 		choices: [
-					"Choice 1",
-					"Choice 2",
-					"Choice 3",
-					"Choice 4",
+					"Bear Island",
+					"Winterfell",
+					"White Harbor",
+					"Dreadfort",
 					],
-		correct: "Choice 1",
+		correct: "Dreadfort",
 	}, {
-		question: "Q8",
-		image: "Image1",
+		question: "Q8: What caused Robert's Rebellion?",
+		image: "assets/images/robert.png",
 		choices: [
-					"Choice 1",
-					"Choice 2",
-					"Choice 3",
-					"Choice 4",
+					"Daenerys Marrying Khal Drogo",
+					"The Tourney at Harrenhall",
+					"The Battle of the Trident",
+					"Rhaegar Kidapping Lyanna",
 					],
-		correct: "Choice 1",
+		correct: "Rhaegar Kidnapping Lyanna",
 	},
 	];
 
 
 //Initialize games
+function Timer() {
+	number = 30;
+	TimerID = setInterval(Decrement, 1500);
+}
+
+function Decrement() {
+	$("#timer").html("<h2>You have " + number + " seconds remaining</h2>")
+	number--;
+	if (number === 0) {
+		clearInterval(TimerID);
+		unanswered++;
+		question++;
+		DisplayButtons();
+	}
+}
+
 function DisplayButtons() {
+	current_question = question_options[question]
 	$("#title").html(question_options[question]["question"]);
+	$(".background-image img").attr("src", current_question.image)
+	console.log(current_question.image)
 	$("#first-option").html(question_options[question]["choices"][0]).attr('data-index', 0);
 	$("#second-option").html(question_options[question]["choices"][1]).attr('data-index', 1);
 	$("#third-option").html(question_options[question]["choices"][2]).attr('data-index', 2);
 	$("#fourth-option").html(question_options[question]["choices"][3]).attr('data-index', 3);
+	Timer();
 }
 
 function EndGame() {
-	alert("End of Game")
-	alert("Score: " + score)
-	question = 0;
 	$("#game-canvas").hide();
-	$("#start-screen").show();
+	$("#end-screen").show();
 }
 
 function CheckAnswer(choice) {
@@ -108,10 +130,10 @@ function CheckAnswer(choice) {
 	console.log("First: " + question_options[question]["choices"][choice])
 	console.log("Second: " + question_options[question]["correct"])
 	if (question_options[question]["choices"][choice] == question_options[question]["correct"]) {
-		score++;
+		correct++;
 		alert("Correct Answer")
 	} else {
-
+		incorrect++;
 		alert("Incorrect Answer ")
 	}
 	if (question === 7) {

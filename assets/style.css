@@ -6,3 +6,7 @@
 #game-canvas {
 	display: none;
 }
+
+#end-screen {
+	display: none;
+}
